@@ -92,11 +92,6 @@ FileServer::setDir(QString sDirectory, const QString& sExtensions) {
  */
 void
 FileServer::onStartServer() {
-#ifdef LOG_VERBOSE
-    logMessage(logFile,
-               Q_FUNC_INFO,
-               QString("Entering"));
-#endif
     if(port == 0) {
         logMessage(logFile,
                    Q_FUNC_INFO,
@@ -223,11 +218,6 @@ FileServer::onNewConnection(QWebSocket *pClient) {
  */
 void
 FileServer::onClientSocketError(QAbstractSocket::SocketError error) {
-#ifdef LOG_VERBOSE
-    logMessage(logFile,
-               Q_FUNC_INFO,
-               QString("Entering"));
-#endif
     Q_UNUSED(error)
     auto *pClient = qobject_cast<QWebSocket *>(sender());
     logMessage(logFile,
@@ -463,11 +453,6 @@ FileServer::onProcessBinaryMessage(QByteArray message) {
 
 void
 FileServer::onClientDisconnected() {
-#ifdef LOG_VERBOSE
-    logMessage(logFile,
-               Q_FUNC_INFO,
-               QString("Entering"));
-#endif
     auto* pClient = qobject_cast<QWebSocket *>(sender());
     QString sDiconnectedAddress = pClient->peerAddress().toString();
 #ifdef LOG_VERBOSE
@@ -492,12 +477,6 @@ FileServer::onClientDisconnected() {
  */
 void
 FileServer::onCloseServer() {
-#ifdef LOG_VERBOSE
-    logMessage(logFile,
-               Q_FUNC_INFO,
-               serverName +
-               QString(" Entering..."));
-#endif
     for(int i=0; i<connections.count(); i++) {
         connections.at(i)->disconnect();
         if(connections.at(i)->isValid())

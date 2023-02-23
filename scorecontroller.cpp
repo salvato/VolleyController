@@ -89,13 +89,13 @@ ScoreController::prepareLogFile() {
         renamed.remove(logFileName+QString(".bkp"));
         renamed.rename(logFileName, logFileName+QString(".bkp"));
     }
-    logFile = new QFile(logFileName);
-    if (!logFile->open(QIODevice::WriteOnly)) {
+    pLogFile = new QFile(logFileName);
+    if (!pLogFile->open(QIODevice::WriteOnly)) {
         QMessageBox::information(this, tr("Volley Controller"),
                                  tr("Impossibile aprire il file %1: %2.")
-                                 .arg(logFileName, logFile->errorString()));
-        delete logFile;
-        logFile = nullptr;
+                                 .arg(logFileName, pLogFile->errorString()));
+        delete pLogFile;
+        pLogFile = nullptr;
     }
 #endif
     return true;
@@ -246,7 +246,7 @@ ScoreController::isConnectedToNetwork() {
         }
     }
 #ifdef LOG_VERBOSE
-    logMessage(logFile,
+    logMessage(pLogFile,
                Q_FUNC_INFO,
                result ? QString("true") : QString("false"));
 #endif
@@ -276,7 +276,7 @@ ScoreController::prepareDirectories() {
         slideDir.setNameFilters(filter);
         slideList = slideDir.entryInfoList();
 #ifdef LOG_VERBOSE
-        logMessage(logFile,
+        logMessage(pLogFile,
                    Q_FUNC_INFO,
                    QString("Slides directory: %1 Found %2 Slides")
                    .arg(sSlideDir)
@@ -287,7 +287,7 @@ ScoreController::prepareDirectories() {
         spotDir.setFilter(QDir::Files);
         spotList = spotDir.entryInfoList();
 #ifdef LOG_VERBOSE
-        logMessage(logFile,
+        logMessage(pLogFile,
                    Q_FUNC_INFO,
                    QString("Spot directory: %1 Found %2 Spots")
                    .arg(sSpotDir)
@@ -358,7 +358,7 @@ ScoreController::prepareDiscovery() {
                                 this, SLOT(onProcessConnectionRequest()));
                         bSuccess = true;
 #ifdef LOG_VERBOSE
-                        logMessage(logFile,
+                        logMessage(pLogFile,
                                    Q_FUNC_INFO,
                                    QString("Listening for connections at address: %1 port:%2")
                                    .arg(discoveryAddress.toString())
@@ -387,7 +387,7 @@ ScoreController::prepareServer() {
     pPanelServer = new NetServer(QString("PanelServer"), pLogFile, this);
     if(!pPanelServer->prepareServer(serverPort)) {
 #ifdef LOG_VERBOSE
-        logMessage(logFile,
+        logMessage(pLogFile,
                    Q_FUNC_INFO,
                    QString("prepareServer() Failed !"));
 #endif
@@ -454,7 +454,7 @@ ScoreController::onProcessConnectionRequest() {
     if(sToken != sNoData) {
         sendAcceptConnection(pDiscoverySocket, hostAddress, port);
 #ifdef LOG_VERBOSE
-        logMessage(logFile,
+        logMessage(pLogFile,
                    Q_FUNC_INFO,
                    QString("Connection request from: %1 at Address %2:%3")
                    .arg(sToken, hostAddress.toString())
@@ -465,7 +465,7 @@ ScoreController::onProcessConnectionRequest() {
         // from the connected clients list
         RemoveClient(hostAddress);
 #ifdef LOG_VERBOSE
-        logMessage(logFile,
+        logMessage(pLogFile,
                    Q_FUNC_INFO,
                    QString("Sent: %1")
                    .arg(sMessage));
@@ -505,8 +505,7 @@ ScoreController::RemoveClient(const QHostAddress& hAddress) {
             pClient = nullptr;
             connectionList.removeAt(i);
 #ifdef LOG_VERBOSE
-            sFound = " Removed !";
-            logMessage(logFile,
+            logMessage(pLogFile,
                        Q_FUNC_INFO,
                        QString("%1")
                        .arg(hAddress.toString()));
@@ -575,7 +574,7 @@ ScoreController::SendToOne(QWebSocket* pClient, const QString& sMessage) {
                 }
 #ifdef LOG_VERBOSE
                 else {
-                    logMessage(logFile,
+                    logMessage(pLogFile,
                                Q_FUNC_INFO,
                                QString("Sent %1 to: %2")
                                .arg(sMessage, pClient->peerAddress().toString()));
@@ -599,7 +598,7 @@ ScoreController::SendToOne(QWebSocket* pClient, const QString& sMessage) {
 int
 ScoreController::SendToAll(const QString& sMessage) {
 #ifdef LOG_VERBOSE
-    logMessage(logFile,
+    logMessage(pLogFile,
                Q_FUNC_INFO,
                sMessage);
 #endif
@@ -627,10 +626,10 @@ ScoreController::onNewConnection(QWebSocket *pClient) {
     connectionList.append(newConnection);
     UpdateUI();
 #ifdef LOG_VERBOSE
-    logMessage(logFile,
+    logMessage(pLogFile,
                Q_FUNC_INFO,
                QString("Client connected: %1")
-               .arg(sAddress));
+               .arg(pClient->peerAddress().toString()));
 #endif
 }
 
@@ -641,12 +640,12 @@ ScoreController::onSlideServerDone(bool bError) {
 #ifdef LOG_VERBOSE
     // Log a Message just to inform
     if(bError) {
-        logMessage(logFile,
+        logMessage(pLogFile,
                    Q_FUNC_INFO,
                    QString("Slide server stopped with errors"));
     }
     else {
-        logMessage(logFile,
+        logMessage(pLogFile,
                    Q_FUNC_INFO,
                    QString("Slide server stopped without errors"));
     }
@@ -660,12 +659,12 @@ ScoreController::onSpotServerDone(bool bError) {
 #ifdef LOG_VERBOSE
     // Log a Message just to inform
     if(bError) {
-        logMessage(logFile,
+        logMessage(pLogFile,
                    Q_FUNC_INFO,
                    QString("Spot server stopped with errors"));
     }
     else {
-        logMessage(logFile,
+        logMessage(pLogFile,
                    Q_FUNC_INFO,
                    QString("Spot server stopped without errors"));
     }
@@ -742,7 +741,7 @@ ScoreController::onClientDisconnected() {
     auto* pClient = qobject_cast<QWebSocket *>(sender());
 #ifdef LOG_VERBOSE
     QString sDiconnectedAddress = pClient->peerAddress().toString();
-    logMessage(logFile,
+    logMessage(pLogFile,
                Q_FUNC_INFO,
                QString("%1 disconnected because %2. Close code: %3")
                .arg(sDiconnectedAddress, pClient->closeReason())
@@ -810,7 +809,7 @@ ScoreController::onGetPanelDirection(const QString& sClientIp) {
 void
 ScoreController::onChangePanelDirection(const QString& sClientIp, PanelDirection direction) {
 #ifdef LOG_VERBOSE
-    logMessage(logFile,
+    logMessage(pLogFile,
                Q_FUNC_INFO,
                QString("Client %1 Direction %2")
                .arg(sClientIp)
@@ -1027,7 +1026,7 @@ ScoreController::onSetNewTiltValue(const QString& sClientIp, int newTilt) {
 void
 ScoreController::onSetScoreOnly(const QString& sClientIp, bool bScoreOnly) {
 #ifdef LOG_VERBOSE
-    logMessage(logFile,
+    logMessage(pLogFile,
                Q_FUNC_INFO,
                QString("Client %1 ScoreOnly: %2")
                .arg(sClientIp)
