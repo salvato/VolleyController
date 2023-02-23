@@ -1,0 +1,19 @@
+<RCC>
+    <qresource prefix="/">
+        <file>key.wav</file>
+        <file>buttonIcons/video-display.png</file>
+        <file>buttonIcons/sign_stop.png</file>
+        <file>buttonIcons/Plus.png</file>
+        <file>buttonIcons/PlaySpots.png</file>
+        <file>buttonIcons/PlaySlides.png</file>
+        <file>buttonIcons/PanelSetup.png</file>
+        <file>buttonIcons/New-Set-Volley.png</file>
+        <file>buttonIcons/New-Game-Volley.png</file>
+        <file>buttonIcons/Minus.png</file>
+        <file>buttonIcons/GeneralSetup.png</file>
+        <file>buttonIcons/Camera.png</file>
+        <file>buttonIcons/ExchangeVolleyField.png</file>
+        <file>myLogo.png</file>
+        <file>buttonIcons/ball.png</file>
+    </qresource>
+</RCC>
