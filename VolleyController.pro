@@ -64,6 +64,8 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 RESOURCES += \
     VolleyController.qrc
 
+RC_ICONS = myLogo.ico
+
 DISTFILES += \
     .gitignore \
     android/AndroidManifest.xml \
