@@ -15,5 +15,6 @@
         <file>buttonIcons/ExchangeVolleyField.png</file>
         <file>myLogo.png</file>
         <file>buttonIcons/ball.png</file>
+        <file>myLogo.ico</file>
     </qresource>
 </RCC>
