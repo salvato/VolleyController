@@ -46,7 +46,7 @@ Edit::Edit(const QString &sString, int iTeam, QWidget *parent)
     , myTeam(iTeam)
 {
     // To make a trasparent background
-    setStyleSheet("background-color: rgba(0, 0, 0, 0);");
+    setStyleSheet("background-color: rgba(0, 0, 0, 0); border: none");
     setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     setText(sString);
     connect(this, SIGNAL(textChanged(QString)), this, SLOT(onTextChanged(QString)));
