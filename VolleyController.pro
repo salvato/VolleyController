@@ -65,6 +65,7 @@ RESOURCES += \
     VolleyController.qrc
 
 DISTFILES += \
+    .gitignore \
     android/AndroidManifest.xml \
     android/build.gradle \
     android/gradle.properties \

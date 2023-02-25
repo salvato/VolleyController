@@ -51,6 +51,7 @@ VolleyController::VolleyController()
 
     service[iServizio ? 1 : 0]->setChecked(true);
     service[iServizio ? 0 : 1]->setChecked(false);
+    service[iServizio ? 0 : 1]->setFocus();
 }
 
 
